@@ -1,3 +1,122 @@
+#search Binary
+def BusquedaBinaria(lista, x, valueSide):
+    izq = 0
+    der = len(lista) -1
+    while izq <= der:
+        medio = int((izq+der)/2)
+        if lista[medio][0] == int(x):
+            return medio
+        elif lista[medio][0] > int(x):
+            der = medio-1
+        else:
+            izq = medio+1
+    if valueSide: 
+       return medio
+    else: return -1
+#Back to Underworld
+cases = int(input())
+for i in range(cases):
+    lenTeam0 = 0 
+    res = 0
+    contGrafos = 0;
+    fights = int(input())
+    listFights = [[0 for x in range(3)] for y in range(1)]
+    for j in range(fights):
+       x, y = input().split()
+       existX = False; existY = False; teamX = -1; teamY = -1; grafoX = -1; grafoY = -1 
+       k = BusquedaBinaria(listFights, int(x), False)
+       if k >= 0:
+          existX = True; grafoX = listFights[k][1]; teamX = listFights[k][2] 
+       k = BusquedaBinaria(listFights, int(y), False)
+       if k >= 0:
+          existY = True; grafoY = listFights[k][1]; teamY = listFights[k][2]
+
+       if existX and existY and grafoX != grafoY:
+           for k in listFights:
+               if k[1] == grafoY: 
+                  if teamX == teamY:
+                      if k[2] == 0: k[2] = 1; lenTeam0 -= 1                      
+                      else: k[2] = 0; lenTeam0 += 1                    
+                  k[1] == grafoX               
+       if existX and existY == False: 
+           if teamX == 0: teamY = 1
+           if teamX == 1: teamY = 0; lenTeam0 += 1
+           index = BusquedaBinaria(listFights, int(y), True)
+           listFights.insert(index + 1, [int(y), grafoX, teamY])
+       if existY and existX == False: 
+           if teamY == 0: teamX = 1
+           if teamY == 1: teamX = 0; lenTeam0 += 1
+           index = BusquedaBinaria(listFights, int(x), True)
+           listFights.insert(index + 1, [int(x), grafoY, teamX])
+       if existX == False and existY == False: 
+           if len(listFights) == 1: 
+               listFights.clear(); lenTeam0 += 1; contGrafos += 1;
+               listFights.append([int(x), contGrafos, 0])
+               listFights.append([int(y), contGrafos, 1])
+           else:
+              contGrafos += 1; lenTeam0 += 1
+              index = BusquedaBinaria(listFights, int(x), True)
+              listFights.insert(index + 1, [int(x), contGrafos, 0])
+              index = BusquedaBinaria(listFights, int(y), True)
+              listFights.insert(index + 1, [int(y), contGrafos, 1])      
+    lenTeam1 = len(listFights) - lenTeam0
+    if lenTeam0 >= lenTeam1: res = lenTeam0
+    else: res = lenTeam1    
+    print("Case " + str(i + 1) + ': ' + str(res))
+
+#Escape from Jail 
+def EscapeFromJail(N, listK, listM):
+    wayTraveled = ["new" for t in range(int(N))]
+    wayTraveled[0] = "traveled"
+    endWay = False
+    while (endWay == False):
+        endWay = True
+        posiciones = [i for i, x in enumerate(wayTraveled) if x == "traveled"]
+        for i in posiciones:
+                cont = 0
+                for j in range(len(listM)):
+                    direccion = 2
+                    seguir = False
+                    if (listM[j][0] == i + 1): direccion = 1; seguir = True
+                    if (listM[j][1] == i + 1): direccion = 0; seguir = True
+                    if (seguir):
+                        if (wayTraveled[listM[j][direccion] - 1] == "new"):
+                            for k in range(len(listK)):
+                                go = True 
+                                if (listK[k][1] == listM[j][direccion]):
+                                    go = False
+                                if(go):
+                                    if (listK[k][0] == listM[j][direccion]):
+                                        for l in range(len(listK)):
+                                            if (listK[l][1] == listK[k][0]): listK[l][1] = 0
+                                    wayTraveled[listM[j][direccion] - 1] = "traveled"
+                                    cont += 1
+                                    if (wayTraveled[len(wayTraveled) - 1] == "traveled"): return 'Y' 
+                                    if (direccion == 0): wayTraveled[listM[j][1] - 1] = "last"
+                                    else: wayTraveled[listM[j][0] - 1] = "last"
+                                    endWay = False      
+                                    if (cont == 2): break 
+                    if (cont == 2): break 
+    return 'N'
+
+N, K, M = input().split()
+listaRes = []
+while(int(N) != -1 and int(K) != -1 and int(M) != -1):
+    listK = [[0 for y in range(2)] for x in range(int(K))] 
+    for i in range(int(K)):
+        a, b = input().split()
+        listK[i][0] = int(a) 
+        listK[i][1] = int(b) 
+    listM = [[0 for y in range(2)] for x in range(int(M))]  
+    for i in range(int(M)):
+        a, b = input().split()
+        listM[i][0] = int(a) 
+        listM[i][1] = int(b) 
+    listaRes.append(EscapeFromJail(int(N), listK, listM))
+    N, K, M = input().split()
+for i in listaRes:
+    print(i)
+
 #Guilty Prince
 def GuiltyPrince (listBi):
    movX = [0,-1,0,1]

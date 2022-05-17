@@ -1,3 +1,34 @@
+#Counting Cells in a Blob 
+def CountingCells(lista):
+   listGroups = [[0 for ejex in range(len(lista))] for ejey in range(len(lista))]    
+   movX = [0,-1,0,1]
+   movY = [-1,0,1,0]  
+   puntoActX = len(lista) / 2         
+   puntoActY = len(lista) / 2         
+   cont = 1
+   thereIsCell = True
+   while(thereIsCell):
+      thereIsCell = False
+      for i in range(4):
+         if ((i != 3 or puntoActX != len(lista) - 1) and (i != 2 or puntoActY != len(lista[0]) - 1) and (i != 1 or puntoActX != 0) and (i != 0 or puntoActY != 0)):
+            if (listBi[puntoActX + movX[i]][puntoActY + movY[i]] == 1):
+               listGroups[puntoActX + movX[i]][puntoActY + movY[i]] = cont
+               
+
+cases = int(input())
+for i in range(cases):
+   input()
+   fila = input()
+   listBi = [[0 for ejex in range(len(fila))] for ejey in range(len(fila))]    
+   for j in range(int(listaBi)):
+      line = input()
+      for k in range(int(listaBi[j])):
+          listBi[j][k] = int(fila[k])
+      fila = input()
+   res = CountingCells(listBi) 
+   print("Case " + str(i + 1) + ': ' + str(res))
+
+
 #search Binary
 def BusquedaBinaria(lista, x, valueSide):
     izq = 0
@@ -63,6 +94,64 @@ for i in range(cases):
     if lenTeam0 >= lenTeam1: res = lenTeam0
     else: res = lenTeam1    
     print("Case " + str(i + 1) + ': ' + str(res))
+
+#Back to Underworld 2
+def addEdge(adj, v, w):     
+    adj[v].append(w)
+    adj[w].append(v) 
+    return adj
+def greedyColoring(list, largo):
+     
+    result = [-1] * largo
+    result[0] = 0;
+    available = [False] * largo
+    for i in range(1, largo):
+        for j in list[i]:
+            if (result[j] != -1):
+                available[result[j]] = True
+        color = 0
+        while color < largo:
+            if (available[color] == False):
+                break            
+            color += 1
+        result[i] = color
+        for j in list[i]:
+            if (result[j] != -1):
+                available[result[j]] = False
+    res = 0
+    for i in result:
+        if i == 0: res += 1
+    if largo - res > res: res = largo - res
+    return res
+def ConverValid(listFights):
+    listWork = []
+    for i in range(len(listFights)):
+        for j in range(len(listFights[i])):
+            thereIs = False
+            for k in range(len(listWork)):
+                if listFights[i][j] == listWork[k]: thereIs = True; listFights[i][j] = int(k); 
+            if thereIs == False: listWork.append(listFights[i][j]); listFights[i][j] = int(len(listWork) - 1)
+    return listFights
+cases = int(input())                   
+for i in range(cases):
+    fights = int(input())
+    listFights = [[] for i in range(1)]
+    for j in range(fights):
+       x, y = input().split()    
+       listFights.append([x, y])
+    listFights.pop(0)
+    listNum = ConverValid(listFights)
+    largo = 0
+    for j in range(len(listNum)):
+        if listNum[j][0] > largo: largo = listNum[j][0]
+        if listNum[j][1] > largo: largo = listNum[j][1]
+    largo += 1
+    listNodo = [[] for i in range(largo)]
+    for j in range(len(listNum)):
+        listNodo = addEdge(listNodo, listNum[j][0], listNum[j][1])
+    res = greedyColoring(listNodo, largo)
+    print("Case " + str(i + 1) + ': ' + str(res))
+
 
 #Escape from Jail 
 def EscapeFromJail(N, listK, listM):
@@ -246,5 +335,10 @@ r = int(input())
 for i in range(r):
    a, b = input().split()
    print("Case " + str(i + 1) + ': ' + str(Suma(int(a), int(b))))
+
+
+
+
+ 
 
 

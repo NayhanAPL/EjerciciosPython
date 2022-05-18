@@ -2,31 +2,66 @@
 def CountingCells(lista):
    listGroups = [[0 for ejex in range(len(lista))] for ejey in range(len(lista))]    
    movX = [0,-1,0,1]
-   movY = [-1,0,1,0]  
-   puntoActX = len(lista) / 2         
-   puntoActY = len(lista) / 2         
-   cont = 1
+   movY = [-1,0,1,0] 
+   cont = 0
+   grupos = []
+   puntoActX = int(len(lista) / 2)         
+   puntoActY = int(len(lista) / 2)      
+   if lista[puntoActX][puntoActY] == 1: cont += 1
+   listGroups[puntoActX][puntoActY] = 3
+
    thereIsCell = True
    while(thereIsCell):
-      thereIsCell = False
-      for i in range(4):
-         if ((i != 3 or puntoActX != len(lista) - 1) and (i != 2 or puntoActY != len(lista[0]) - 1) and (i != 1 or puntoActX != 0) and (i != 0 or puntoActY != 0)):
-            if (listBi[puntoActX + movX[i]][puntoActY + movY[i]] == 1):
-               listGroups[puntoActX + movX[i]][puntoActY + movY[i]] = cont
-               
-
+        thereIsCell = False
+        for i in range(4):
+           if ((i != 3 or puntoActX != len(lista) - 1) and (i != 2 or puntoActY != len(lista[0]) - 1) and (i != 1 or puntoActX != 0) and (i != 0 or puntoActY != 0)):
+              if (listGroups[puntoActX + movX[i]][puntoActY + movY[i]] == 1):
+                 listGroups[puntoActX + movX[i]][puntoActY + movY[i]] = 3
+              if (listGroups[puntoActX + movX[i]][puntoActY + movY[i]] == 0):
+                 listGroups[puntoActX + movX[i]][puntoActY + movY[i]] = 1
+                 if (lista[puntoActX + movX[i]][puntoActY + movY[i]] == 1):
+                     listGroups[puntoActX + movX[i]][puntoActY + movY[i]] = 2
+        
+        puntoPosibleX = -1
+        puntoPosibleY = -1             
+        for i in range(len(listGroups)):
+            for j in range(len(listGroups[i])):
+                if listGroups[i][j] == 1:
+                    puntoPosibleX = i
+                    puntoPosibleY = j
+                if listGroups[i][j] == 2:
+                    cont += 1
+                    puntoActX = i
+                    puntoActY = j
+                    listGroups[i][j] = 3
+                    thereIsCell = True  
+                    break
+            if (thereIsCell):
+                break
+        if (thereIsCell == False and puntoPosibleX != -1 and puntoPosibleY != -1):  
+            puntoActX = puntoPosibleX
+            puntoActY = puntoPosibleY
+            listGroups[puntoActX][puntoActY] = 3
+            if cont > 0:
+               grupos.append(cont)
+            cont = 0 
+            thereIsCell = True 
+   res = 0
+   for i in grupos:
+       if res < i: res = i
+   return res
 cases = int(input())
 for i in range(cases):
    input()
    fila = input()
-   listBi = [[0 for ejex in range(len(fila))] for ejey in range(len(fila))]    
-   for j in range(int(listaBi)):
-      line = input()
-      for k in range(int(listaBi[j])):
-          listBi[j][k] = int(fila[k])
+   listaBi = [[0 for ejex in range(len(fila))] for ejey in range(len(fila))]    
+   for j in range(len(listaBi)):
+      for k in range(len(listaBi[j])):
+          listaBi[j][k] = int(fila[k])
       fila = input()
-   res = CountingCells(listBi) 
-   print("Case " + str(i + 1) + ': ' + str(res))
+   res = CountingCells(listaBi) 
+   print(res)
+   print()
 
 
 #search Binary
@@ -335,6 +370,8 @@ r = int(input())
 for i in range(r):
    a, b = input().split()
    print("Case " + str(i + 1) + ': ' + str(Suma(int(a), int(b))))
+
+
 
 
 
